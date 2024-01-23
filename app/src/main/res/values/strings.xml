@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Network Tools</string>
+    <string name="scan_header_name">Scan</string>
+    <string name="select_interface">Select Interface</string>
+    <string name="interface_side_heading">Interface:</string>
+    <string name="default_interface_text">No interfaces found</string>
+    <string name="device_address">Device Address:</string>
+    <string name="default_ip_text">No Address</string>
+    <string name="rescan_button">Rescan</string>
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+    <string name="nav_title">Tools</string>
+    <string name="dns_header_name">DNS</string>
+    <string name="mac_lookup_header">MAC Lookup</string>
+    <string name="mac_input_hint">00:00:00:00:00:00</string>
+</resources>

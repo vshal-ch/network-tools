@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/dns_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dns_input_back"
+        android:hint="Domain name"
+        android:inputType="textUri"
+        android:textCursorDrawable="@drawable/text_cursor"
+        android:drawableBottom="@color/black"
+        />
+
+    <Button
+        android:id="@+id/resolve_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="?colorPrimary"
+        android:text="Resolve"
+        android:textColor="?colorOnPrimary" />
+
+    <TextView
+        android:id="@+id/dns_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:visibility="invisible"
+        android:textSize="17sp"/>
+</LinearLayout>
