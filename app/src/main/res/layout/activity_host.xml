@@ -18,8 +18,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            android:contentDescription="Back" />
+            android:contentDescription="Back"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,6 +29,7 @@
             android:textColor="?colorOnPrimary"
             android:textSize="24sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,6 +74,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,12 +91,13 @@
                 android:textColor="@color/dark_blue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -122,6 +125,7 @@
                         android:layout_height="wrap_content"
                         android:padding="0dp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -169,8 +173,8 @@
                                 android:maxLines="1"
                                 android:padding="0dp"
                                 android:textAlignment="textEnd"
-                                android:textSize="14sp"
-                                android:textCursorDrawable="@drawable/text_cursor"/>
+                                android:textCursorDrawable="@drawable/text_cursor"
+                                android:textSize="14sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -199,19 +203,21 @@
                                 android:maxLines="1"
                                 android:padding="0dp"
                                 android:textAlignment="textEnd"
-                                android:textSize="14sp"
-                                android:textCursorDrawable="@drawable/text_cursor"/>
+                                android:textCursorDrawable="@drawable/text_cursor"
+                                android:textSize="14sp" />
                         </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="7dp"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -235,12 +241,12 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/dns_input_back"
                         android:maxLines="1"
-                        android:textAlignment="textEnd"
-                        android:textSize="16sp"
                         android:paddingVertical="5dp"
+                        android:textAlignment="textEnd"
                         android:textCursorDrawable="@drawable/text_cursor"
-                        android:digits="1234567890, "/>
+                        android:textSize="16sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -263,23 +269,60 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/dns_input_back"
                         android:maxLines="1"
-                        android:textAlignment="textEnd"
-                        android:textSize="16sp"
                         android:paddingVertical="5dp"
+                        android:textAlignment="textEnd"
                         android:textCursorDrawable="@drawable/text_cursor"
-                        android:digits="1234567890, "/>
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
+
             <Button
                 android:id="@+id/port_scan_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
+                android:background="@drawable/scan_btn_background"
                 android:text="SCAN"
                 android:textColor="@color/white"
-                android:background="@drawable/scan_btn_background"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/open_ports_title"
+                android:textColor="@color/dark_blue"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/no_ports_found_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text="@string/no_open_ports_found_msg"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <ListView
+                    android:id="@+id/portsListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

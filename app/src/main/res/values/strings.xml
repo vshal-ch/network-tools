@@ -13,4 +13,6 @@
     <string name="dns_header_name">DNS</string>
     <string name="mac_lookup_header">MAC Lookup</string>
     <string name="mac_input_hint">00:00:00:00:00:00</string>
+    <string name="no_open_ports_found_msg">No open ports found!</string>
+    <string name="open_ports_title">Open Ports</string>
 </resources>

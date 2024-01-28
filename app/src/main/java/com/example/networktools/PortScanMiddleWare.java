@@ -1,13 +1,25 @@
 package com.example.networktools;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class PortScanMiddleWare {
+    private String ip;
     private int fromPort;
     private int toPort;
     private int[] includedPorts;
     private int[] excludedPorts;
-    private boolean onlyIncludePorts=false;
+    private boolean onlyIncludePorts = false;
 
     private final String PORT_INPUT_REGEX = "^[0-9]+(((,|,\\ ){1}[0-9]+\\ *)*|(\\ +[0-9]+)*)$";
+
+    public PortScanMiddleWare(String ip) {
+        this.ip = ip;
+    }
+
+    public String getIp() {
+        return ip;
+    }
 
     public String validatePortInput(String fromPortStr, String toPortStr, String includedPortsStr, String excludedPortsStr) {
         if (!(fromPortStr.length() == 0 || toPortStr.length() == 0)) {
@@ -36,7 +48,7 @@ public class PortScanMiddleWare {
             this.onlyIncludePorts = true;
         }
 
-        if(excludedPortsStr.length() != 0){
+        if (excludedPortsStr.length() != 0) {
             if (!excludedPortsStr.matches(this.PORT_INPUT_REGEX)) {
                 return "Invalid input format in Exclude Ports";
             }
@@ -100,5 +112,90 @@ public class PortScanMiddleWare {
             return "Port should be in range 1-65535";
         }
         return "valid";
+    }
+
+    public int getFromPort() {
+        return fromPort;
+    }
+
+    public int getToPort() {
+        return toPort;
+    }
+
+    public int[] getIncludedPorts() {
+        Arrays.sort(includedPorts);
+        return includedPorts;
+    }
+
+    public int[] getExcludedPorts() {
+        Arrays.sort(excludedPorts);
+        return excludedPorts;
+    }
+
+    public boolean isOnlyIncludePorts() {
+        return this.onlyIncludePorts;
+    }
+
+    public ArrayList<Integer> getFinalPortsArray() {
+        ArrayList<Integer> result = new ArrayList<>();
+        int size = onlyIncludePorts ? includedPorts.length : includedPorts.length + toPort - fromPort + 1;
+        int[] res = new int[size];
+        int index = 0;
+        int[] incPorts = getIncludedPorts();
+        int[] excPorts = getExcludedPorts();
+
+        if (onlyIncludePorts) {
+            int j = 0;
+            for (int incPort : incPorts) {
+                if (incPort < excPorts[j]) {
+                    res[index++] = incPort;
+                    result.add(incPort);
+                } else if (incPort == excPorts[j]) {
+                    j++;
+                } else {
+                    res[index++] = incPort;
+                    result.add(incPort);
+                    while (j < excPorts.length && incPort > excPorts[j]) {
+                        j++;
+                    }
+                }
+            }
+            return result;
+        }
+
+        int temp = fromPort;
+
+        int j = 0;
+        boolean rangeDone = false;
+        for (int i = 0; i < incPorts.length; i++) {
+            if (!rangeDone && incPorts[i] >= fromPort) {
+                for (int k = temp; k <= toPort; k++) {
+                    if (k == excPorts[j]) {
+                        j++;
+                        continue;
+                    }
+                    if (k > excPorts[j]) {
+                        while (j < excPorts.length && k > excPorts[j]) {
+                            j++;
+                        }
+                    }
+                    res[index++] = k;
+                    if(incPorts[i] == k){
+                        i++;
+                    }
+                }
+            }
+            if (incPorts[i] == excPorts[j]) {
+                j++;
+                continue;
+            } else {
+                while (j < excPorts.length && incPorts[i] > excPorts[j]) {
+                    j++;
+                }
+            }
+            res[index++] = incPorts[i];
+        }
+
+        return result;
     }
 }
