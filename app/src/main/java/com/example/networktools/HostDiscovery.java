@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+//todo
+//record and display hosts over multiple scans
 public class HostDiscovery implements Runnable {
     int THREADS = 10;
     String scanMessage;

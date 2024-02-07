@@ -316,7 +316,7 @@
                 android:layout_height="200dp">
 
                 <ListView
-                    android:id="@+id/portsListView"
+                    android:id="@+id/ports_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"

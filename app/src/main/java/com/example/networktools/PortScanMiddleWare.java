@@ -1,9 +1,12 @@
 package com.example.networktools;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PortScanMiddleWare {
+    private final String TAG = "portscnmid";
     private String ip;
     private int fromPort;
     private int toPort;
@@ -30,17 +33,24 @@ public class PortScanMiddleWare {
     }
 
     public int[] getIncludedPorts() {
+        if (includedPorts == null) {
+            return null;
+        }
         Arrays.sort(includedPorts);
         return includedPorts;
     }
 
     public int[] getExcludedPorts() {
+        if (excludedPorts == null) {
+            return null;
+        }
         Arrays.sort(excludedPorts);
         return excludedPorts;
     }
 
     public String validatePortInput(String fromPortStr, String toPortStr, String includedPortsStr, String excludedPortsStr) {
-        if(fromPortStr.length() == 0 && toPortStr.length() == 0 && includedPortsStr.length()==0){
+        this.reInitialize();
+        if (fromPortStr.length() == 0 && toPortStr.length() == 0 && includedPortsStr.length() == 0) {
             return "Empty Fields!";
         }
 
@@ -99,6 +109,10 @@ public class PortScanMiddleWare {
             }
         }
 
+        if (!onlyIncludePorts && includedPortsStr.length() == 0) {
+            return "valid";
+        }
+
         if (!includedPortsStr.matches(this.PORT_INPUT_REGEX)) {
             return "Invalid input format in Include Ports";
         }
@@ -129,6 +143,12 @@ public class PortScanMiddleWare {
         return "valid";
     }
 
+    private void reInitialize() {
+        this.onlyIncludePorts = false;
+        this.excludedPorts = null;
+        this.includedPorts = null;
+    }
+
     private String validatePort(int port) {
         if (port < 1 || port > 65535) {
             return "Port should be in range 1-65535";
@@ -142,95 +162,143 @@ public class PortScanMiddleWare {
 
     /*
     test cases
-    1) only from and to
-    2) only included
-    3) included before from and to
-    4) included in from and to
-    5) included after from and to
-    6) included before and in from and to
-    7) included before, in and after from and to
-    8) included in and after from and to
-    9) from and to with excluded in
-    10) from and to with excluded before
-    11) from and to with excluded after
-    12) excluded before and in from and to
-    13) excluded before, in and after from and to
-    14) excluded in and after from and to
-    15) included and excluded before, after, mixed
-    16) included, excluded with from and to - before,after,mixed
-    17) same included and excluded
-    18) same from and to as excluded
-    19) all three same
+    1) only from and to - 1
+    2) only included - 1
+    3) included before from and to - 1
+    4) included in from and to - 1
+    5) included after from and to - 1
+    6) included before and in from and to - 1
+    7) included before, in and after from and to - 1
+    8) included in and after from and to - 1
+    9) from and to with excluded in - 1
+    10) from and to with excluded before - 1
+    11) from and to with excluded after - 1
+    12) excluded before and in from and to - 1
+    13) excluded before, in and after from and to - 1
+    14) excluded in and after from and to -1
+    15) included and excluded before, after, mixed - 1
+    16) included, excluded with from and to - before,after,mixed - 1
+    17) same included and excluded - 1
+    18) same from and to as excluded - 1
+    19) all three same - 1
      */
     public int[] getFinalPortsArray() {
-        int size = onlyIncludePorts ? includedPorts.length : includedPorts.length + toPort - fromPort + 1;
+        int includedLength = includedPorts == null ? 0 : includedPorts.length;
+        int size = onlyIncludePorts ? includedLength : includedLength + toPort - fromPort + 1;
         int[] result = new int[size];
         int index = 0;
-        int[] incPorts = getIncludedPorts();
+        int[] incPorts;
         int[] excPorts = getExcludedPorts();
 
         if (onlyIncludePorts) {
+            incPorts = getIncludedPorts();
             int j = 0;
-            for (int incPort : incPorts) {
-                if (incPort < excPorts[j]) {
-                    result[index++] = incPort;
-                } else if (incPort == excPorts[j]) {
-                    j++;
-                } else {
-                    result[index++] = incPort;
-                    while (j < excPorts.length && incPort > excPorts[j]) {
-                        j++;
-                    }
+            for (int i=0;i<includedLength;i++) {
+                if(i !=0 && incPorts[i] == incPorts[i-1]){
+                    continue;
                 }
+                if (excPorts == null) {
+                    result[index++] = incPorts[i];
+                    continue;
+                }
+                while (j < excPorts.length && incPorts[i] > excPorts[j]) {
+                    j++;
+                }
+                if (j < excPorts.length && incPorts[i] == excPorts[j]) {
+                    j++;
+                    continue;
+                }
+
+                result[index++] = incPorts[i];
             }
-            return result;
+            return Arrays.copyOf(result,index);
         }
 
-        int temp = fromPort;
-
         int j = 0;
-        if (incPorts.length == 0) {
+        if (includedLength == 0) {
             for (int i = fromPort; i <= toPort; i++) {
+                if (excPorts == null) {
+                    result[index++] = i;
+                    continue;
+                }
+                while (j < excPorts.length && i > excPorts[j]) {
+                    j++;
+                }
                 if (j < excPorts.length && excPorts[j] == i) {
                     j++;
                     continue;
                 }
                 result[index++] = i;
             }
-            return result;
+            return Arrays.copyOf(result,index);
         }
 
+        incPorts = getIncludedPorts();
         boolean rangeDone = false;
         for (int i = 0; i < incPorts.length; i++) {
+            if(i !=0 && incPorts[i] == incPorts[i-1]){
+                continue;
+            }
+            boolean iChanged = false;
             if (!rangeDone && incPorts[i] >= fromPort) {
-                for (int k = temp; k <= toPort; k++) {
-                    if (k == excPorts[j]) {
+                for (int k = fromPort; k <= toPort; k++) {
+                    if (i < incPorts.length && incPorts[i] == k) {
+                        i++;
+                        iChanged = true;
+                    }
+                    if (excPorts == null) {
+                        result[index++] = k;
+                        continue;
+                    }
+                    while (j < excPorts.length && k > excPorts[j]) {
+                        j++;
+                    }
+                    if (j < excPorts.length && k == excPorts[j]) {
                         j++;
                         continue;
                     }
-                    if (k > excPorts[j]) {
-                        while (j < excPorts.length && k > excPorts[j]) {
-                            j++;
-                        }
-                    }
                     result[index++] = k;
-                    if (incPorts[i] == k) {
-                        i++;
-                    }
                 }
                 rangeDone = true;
             }
-            if (incPorts[i] == excPorts[j]) {
+            if (i >= incPorts.length) {
+                break;
+            }
+            if (excPorts == null) {
+                result[index++] = incPorts[i];
+                continue;
+            }
+            while (j < excPorts.length && incPorts[i] > excPorts[j]) {
+                j++;
+            }
+            if (j < excPorts.length && incPorts[i] == excPorts[j]) {
                 j++;
                 continue;
-            } else if (incPorts[i] > excPorts[j]) {
-                while (j < excPorts.length && incPorts[i] > excPorts[j]) {
-                    j++;
-                }
             }
+
             result[index++] = incPorts[i];
+            if (iChanged) {
+                i++;
+            }
         }
 
-        return result;
+        if (!rangeDone) {
+            for (int i = fromPort; i <= toPort; i++) {
+                if (excPorts == null) {
+                    result[index++] = i;
+                    continue;
+                }
+                while (j < excPorts.length && i > excPorts[j]) {
+                    j++;
+                }
+                if (j < excPorts.length && excPorts[j] == i) {
+                    j++;
+                    continue;
+                }
+                result[index++] = i;
+            }
+        }
+
+        return Arrays.copyOf(result,index);
     }
 }

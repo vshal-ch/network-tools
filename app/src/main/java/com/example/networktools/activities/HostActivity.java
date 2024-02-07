@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,8 @@ import com.example.networktools.ThreadExecuter;
 import java.util.ArrayList;
 import java.util.IllegalFormatException;
 
+//todo
+//lose focus on clicking scan button
 public class HostActivity extends AppCompatActivity implements View.OnClickListener {
     ImageButton backBtn;
     Spinner scanTechniqueSpinner;
@@ -32,6 +35,8 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
     EditText portsIncludedInput;
     EditText portsExcludedInput;
     Button portScanBtn;
+    TextView portScanResultView;
+    ListView openPortsView;
 
     PortScanMiddleWare portScanMiddleWare;
     PortScan portScan;
@@ -50,6 +55,8 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
         portsIncludedInput = findViewById(R.id.include_ports);
         portsExcludedInput = findViewById(R.id.exclude_ports);
         portScanBtn = findViewById(R.id.port_scan_btn);
+        portScanResultView = findViewById(R.id.no_ports_found_msg);
+        openPortsView = findViewById(R.id.ports_list_view);
 
         ArrayAdapter<CharSequence> scanTechniquesAdapter = ArrayAdapter.createFromResource(this, R.array.port_scan_techniques, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         scanTechniqueSpinner.setAdapter(scanTechniquesAdapter);
@@ -59,7 +66,7 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
 
         ipTextView.setText(ip);
         this.portScanMiddleWare = new PortScanMiddleWare(ip);
-        this.portScan = new PortScan(this.portScanMiddleWare);
+        this.portScan = new PortScan(this.portScanMiddleWare, this, portScanResultView, openPortsView);
         this.threadExecuter = new ThreadExecuter();
 
         portScanBtn.setOnClickListener(this);
@@ -74,6 +81,7 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
                 super.onBackPressed();
                 break;
             case R.id.port_scan_btn:
+                this.portScanBtn.requestFocus();
                 this.portReScan();
                 break;
             default:
@@ -91,6 +99,7 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
 
         if (!validatePortsResult.equals("valid")) {
             showToast(validatePortsResult);
+            return;
         }
 
         this.threadExecuter.execute(this.portScan);
