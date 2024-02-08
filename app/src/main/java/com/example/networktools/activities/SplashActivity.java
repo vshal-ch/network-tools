@@ -1,5 +1,6 @@
 package com.example.networktools.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,10 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
-// todo
-//fix back press to spalsh screen
-//add dns activity
-
+//todo
+//change readme
+//learn reverse engineering and learn how to get network devices macs
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

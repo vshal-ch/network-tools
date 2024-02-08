@@ -1,9 +1,11 @@
 package com.example.networktools.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +26,6 @@ import com.example.networktools.ThreadExecuter;
 import java.util.ArrayList;
 import java.util.IllegalFormatException;
 
-//todo
-//lose focus on clicking scan button
 public class HostActivity extends AppCompatActivity implements View.OnClickListener {
     ImageButton backBtn;
     Spinner scanTechniqueSpinner;
@@ -81,7 +81,7 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
                 super.onBackPressed();
                 break;
             case R.id.port_scan_btn:
-                this.portScanBtn.requestFocus();
+                hideInput(view);
                 this.portReScan();
                 break;
             default:
@@ -107,5 +107,13 @@ public class HostActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showToast(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideInput(View view) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (Exception ignored) {
+        }
     }
 }
